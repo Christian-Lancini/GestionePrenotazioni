@@ -1,10 +1,16 @@
+# AUTORE: Christian Lancini
+# Data inizio sviluppo: 9/11/25
+
+
 import tkinter as tk
 import json
 
 window = tk.Tk()
 window.geometry("1200x700")
-window.title("Hello TkInter!")
+window.title("Gestione di prenotazione")
 window.configure(background="white")
+
+# --- FUNZIONI ---
 
 def clear():
     benvenuto.destroy()
@@ -12,14 +18,44 @@ def clear():
     prenota.destroy()
     impostazioni.destroy()
 
-# --- FUNZIONI ---
+def prenota_sala(sala_selezionata):
+    #! BUG: I Button quando premuti non funzionano, cercare un metodo per cercare la sala giusta
 
-def prenota_sala():
-    #TODO: Sezione per prenotare sala.
-    pass
+    with open("sale.json", "r", encoding="utf-8") as file:
+        sale_data = json.load(file) 
+
+    sala_trovata = None
+    for s in sale_data:
+        if s["descrizione"] == sala_selezionata["descrizione"]:
+            sala_trovata = s
+            break
+    
+    if sala_trovata:
+        clear()
+        
+        frame_titolo_prenota = tk.Frame(window, bg="white")
+        frame_titolo_prenota.pack(pady=20)
+        titolo_prenota = tk.Label(frame_titolo_prenota, text="Prenotazione Sala", bg="white", font=("Arial", 20))
+        titolo_prenota.pack(pady=50)
+
+        descrizione = sala_trovata["descrizione"]
+        capienza = sala_trovata["capienza"]
+        orario = sala_trovata["orario-occupato"]
+        
+        testo_sala = f"Sala: {descrizione}\nCapienza: {capienza} persone\nOrario: {orario}"
+        conferma_label = tk.Label(frame_titolo_prenota, text=testo_sala, bg="white", font=("Arial", 16))
+        conferma_label.pack(pady=20)
+
+        conferma_btn = tk.Button(frame_titolo_prenota, text="Conferma Prenotazione", command=lambda s=sala_trovata: conferma_prenotazione(s))
+        conferma_btn.pack(pady=20)
+
+    else:
+        # Se la sala non viene trovata
+        errore_label = tk.Label(window, text="Sala non trovata. Riprova.", fg="red", bg="white")
+        errore_label.pack(pady=10)
+
 
 def prenota_sezione():
-    #TODO: Cancella schermata
     #------------------------------------------------
     #|           [Seleziona la Data]                 |
     #|  (Calendario o input di data)                 |
@@ -50,8 +86,6 @@ def prenota_sezione():
     titolo_prenotazione = tk.Label(frame_titolo_prenotazioni, text="Prenotazioni", bg="white", font=("Arial", 20))
     titolo_prenotazione.pack(pady=50)
 
-    # TODO: Christian controlla la gestione per le sale nel json.
-
     frame_elenco_sale = tk.Frame(window, bg="white")
     frame_elenco_sale.pack(pady=15)
 
@@ -67,15 +101,14 @@ def prenota_sezione():
         occupata = sala["occupata"]
         orario = sala["orario-occupato"]
         occupata_da = sala["occupata_da"]
-        sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=prenota_sala)
-        sala.pack(pady=25)
+        btn_sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=lambda s=sala: prenota_sala(s))
+        btn_sala.pack(pady=25)
 
 
 
     
 
 def impostazioni():
-    #TODO: Cancella schermata
     #------------------------------------------------
     #|              [Impostazioni]                  |
     #------------------------------------------------
@@ -94,7 +127,7 @@ def impostazioni():
     #testo_di_conferma.grid(row=0, column=0, padx=10) 
     
     clear()
-
+    #TODO: Creare schermata impostazioni
 
 # --- SEZIONE TITOLO ---
 benvenuto = tk.Label(window, text="Benvenuto!", font=("Arial", 16), bg="white")
