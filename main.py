@@ -2,7 +2,7 @@ import tkinter as tk
 import json
 
 window = tk.Tk()
-window.geometry("1200x600")
+window.geometry("1200x700")
 window.title("Hello TkInter!")
 window.configure(background="white")
 
@@ -13,6 +13,11 @@ def clear():
     impostazioni.destroy()
 
 # --- FUNZIONI ---
+
+def prenota_sala():
+    #TODO: Sezione per prenotare sala.
+    pass
+
 def prenota_sezione():
     #TODO: Cancella schermata
     #------------------------------------------------
@@ -47,10 +52,24 @@ def prenota_sezione():
 
     # TODO: Christian controlla la gestione per le sale nel json.
 
+    frame_elenco_sale = tk.Frame(window, bg="white")
+    frame_elenco_sale.pack(pady=15)
+
     with open("sale.json", "r", encoding="utf-8") as file:
         sale = json.load(file)
 
-    print(sale)
+    i = 0
+
+    for sala in sale:   
+        i += 1
+        desc = sala["descrizione"]
+        cap = sala["capienza"]
+        occupata = sala["occupata"]
+        orario = sala["orario-occupato"]
+        occupata_da = sala["occupata_da"]
+        sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=prenota_sala)
+        sala.pack(pady=25)
+
 
 
     

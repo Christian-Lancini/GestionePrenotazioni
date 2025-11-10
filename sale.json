@@ -10,7 +10,7 @@
     {
         "nome": "sala#2",
         "capienza": 30,
-        "descrizione": "Una sala conferenze dalle dimensioni medie, utile per conferenze lavorative",
+        "descrizione": "Una sala conferenze utile per conferenze lavorative",
         "occupata": false,
         "orario-occupato": 0,
         "occupata_da": ""
