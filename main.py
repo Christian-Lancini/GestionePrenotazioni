@@ -10,6 +10,11 @@ window.geometry("1200x700")
 window.title("Gestione di prenotazione")
 window.configure(background="white")
 
+# --- VARIABILI GLOBAL PER CLEAR2 ---
+frame_titolo_prenotazioni = None
+frame_elenco_sale = None
+
+
 # --- FUNZIONI ---
 
 def clear():
@@ -18,9 +23,15 @@ def clear():
     prenota.destroy()
     impostazioni.destroy()
 
-def prenota_sala(sala_selezionata):
-    #! BUG: I Button quando premuti non funzionano, cercare un metodo per cercare la sala giusta
+def clear2():
+    frame_titolo_prenotazioni.destroy()
+    frame_elenco_sale.destroy()
 
+def dati_sala():
+    #TODO: Fai la grafica per inserire i dati per confermare la prenotazione
+    pass
+
+def prenota_sala_ui(sala_selezionata):
     with open("sale.json", "r", encoding="utf-8") as file:
         sale_data = json.load(file) 
 
@@ -28,27 +39,32 @@ def prenota_sala(sala_selezionata):
     for s in sale_data:
         if s["descrizione"] == sala_selezionata["descrizione"]:
             sala_trovata = s
+            print(sala_trovata)
             break
-    
+
     if sala_trovata:
-        clear()
-        
-        frame_titolo_prenota = tk.Frame(window, bg="white")
-        frame_titolo_prenota.pack(pady=20)
-        titolo_prenota = tk.Label(frame_titolo_prenota, text="Prenotazione Sala", bg="white", font=("Arial", 20))
-        titolo_prenota.pack(pady=50)
+        clear2()
+
+        frame_titolo_prenota = tk.Frame(window, bg="#f7f7f7", bd=5, relief="solid", padx=20, pady=20)
+        frame_titolo_prenota.pack(pady=30, padx=30)
+
+        titolo_prenota = tk.Label(frame_titolo_prenota, text="Prenotazione Sala", bg="#f7f7f7", font=("Helvetica", 24, "bold"), fg="#333")
+        titolo_prenota.pack(pady=10)
 
         descrizione = sala_trovata["descrizione"]
         capienza = sala_trovata["capienza"]
         orario = sala_trovata["orario-occupato"]
-        
+
         testo_sala = f"Sala: {descrizione}\nCapienza: {capienza} persone\nOrario: {orario}"
-        conferma_label = tk.Label(frame_titolo_prenota, text=testo_sala, bg="white", font=("Arial", 16))
+        conferma_label = tk.Label(frame_titolo_prenota, text=testo_sala, bg="#f7f7f7", font=("Arial", 16), fg="#555")
         conferma_label.pack(pady=20)
 
-        conferma_btn = tk.Button(frame_titolo_prenota, text="Conferma Prenotazione", command=lambda s=sala_trovata: conferma_prenotazione(s))
+        conferma_btn = tk.Button(frame_titolo_prenota, text="Conferma Prenotazione", font=("Helvetica", 14), bg="#808080",  fg="white", relief="flat", width=20, height=2, command=dati_sala)
         conferma_btn.pack(pady=20)
 
+        # Effetto hover
+        conferma_btn.bind("<Enter>", lambda e: conferma_btn.config(bg="#778899", relief="raised"))
+        conferma_btn.bind("<Leave>", lambda e: conferma_btn.config(bg="#808080", relief="flat"))
     else:
         # Se la sala non viene trovata
         errore_label = tk.Label(window, text="Sala non trovata. Riprova.", fg="red", bg="white")
@@ -78,6 +94,7 @@ def prenota_sezione():
     #testo_di_conferma = tk.Label(frame_test, text="Test riuscito")
     #testo_di_conferma.grid(row=0, column=0, padx=10) 
 
+    global frame_titolo_prenotazioni, frame_elenco_sale
     clear()
 
     frame_titolo_prenotazioni = tk.Frame(window, bg="white")
@@ -101,7 +118,7 @@ def prenota_sezione():
         occupata = sala["occupata"]
         orario = sala["orario-occupato"]
         occupata_da = sala["occupata_da"]
-        btn_sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=lambda s=sala: prenota_sala(s))
+        btn_sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=lambda s=sala: prenota_sala_ui(s))
         btn_sala.pack(pady=25)
 
 
