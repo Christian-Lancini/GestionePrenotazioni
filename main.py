@@ -1,6 +1,15 @@
 # AUTORE: Christian Lancini
 # Data inizio sviluppo: 9/11/25
 
+# BUG TROVATI:
+#! 1. BUG: Appena torno nella home il tasto impostazioni non va.
+
+
+# DA FARE:
+#TODO: Fai la grafica per inserire i dati per confermare la prenotazione
+#TODO: Creare schermata impostazioni
+#TODO: Migliorare UI
+
 
 import tkinter as tk
 import json
@@ -16,19 +25,13 @@ frame_elenco_sale = None
 
 
 # --- FUNZIONI ---
-
 def clear():
-    benvenuto.destroy()
-    frame_bottoni.destroy()
-    prenota.destroy()
-    impostazioni.destroy()
-
-def clear2():
-    frame_titolo_prenotazioni.destroy()
-    frame_elenco_sale.destroy()
+    for widget in window.winfo_children():
+        widget.pack_forget()
+        widget.grid_forget()
+        widget.place_forget()
 
 def dati_sala():
-    #TODO: Fai la grafica per inserire i dati per confermare la prenotazione
     pass
 
 def prenota_sala_ui(sala_selezionata):
@@ -43,7 +46,13 @@ def prenota_sala_ui(sala_selezionata):
             break
 
     if sala_trovata:
-        clear2()
+        clear()
+
+        button_back_widget = tk.Frame(window, bg="white")
+        button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+        back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                                bg="white", relief="flat", command=prenota_sezione)
+        back_button.grid(row=0, column=0)
 
         frame_titolo_prenota = tk.Frame(window, bg="#f7f7f7", bd=5, relief="solid", padx=20, pady=20)
         frame_titolo_prenota.pack(pady=30, padx=30)
@@ -66,7 +75,6 @@ def prenota_sala_ui(sala_selezionata):
         conferma_btn.bind("<Enter>", lambda e: conferma_btn.config(bg="#778899", relief="raised"))
         conferma_btn.bind("<Leave>", lambda e: conferma_btn.config(bg="#808080", relief="flat"))
     else:
-        # Se la sala non viene trovata
         errore_label = tk.Label(window, text="Sala non trovata. Riprova.", fg="red", bg="white")
         errore_label.pack(pady=10)
 
@@ -96,6 +104,12 @@ def prenota_sezione():
 
     global frame_titolo_prenotazioni, frame_elenco_sale
     clear()
+
+    button_back_widget = tk.Frame(window, bg="white")
+    button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                            bg="white", relief="flat", command=home)
+    back_button.grid(row=0, column=0)
 
     frame_titolo_prenotazioni = tk.Frame(window, bg="white")
     frame_titolo_prenotazioni.pack(pady=20)
@@ -144,21 +158,37 @@ def impostazioni():
     #testo_di_conferma.grid(row=0, column=0, padx=10) 
     
     clear()
-    #TODO: Creare schermata impostazioni
+    button_back_widget = tk.Frame(window, bg="white")
+    button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                            bg="white", relief="flat", command=home)
+    back_button.grid(row=0, column=0)
 
-# --- SEZIONE TITOLO ---
-benvenuto = tk.Label(window, text="Benvenuto!", font=("Arial", 16), bg="white")
-benvenuto.pack(pady=20) 
 
-# --- SEZIONE BOTTONI ---
-frame_bottoni = tk.Frame(window, bg="white")
-frame_bottoni.pack(pady=50)
+def home():
+    clear()
 
-prenota = tk.Button(frame_bottoni, text="Prenota Sala", relief="raised", command=prenota_sezione)
-prenota.grid(row=0, column=0, padx=10) 
+    button_exit_widget = tk.Frame(window, bg="white")
+    button_exit_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_exit = tk.Button(button_exit_widget, text="X", font=("Arial", 18, "bold"),
+                            bg="white", relief="flat", command=exit)
+    back_exit.grid(row=0, column=0)
 
-impostazioni = tk.Button(frame_bottoni, text="Impostazioni", relief="raised", command=impostazioni)
-impostazioni.grid(row=0, column=1, padx=10)
+    global impostazioni, benvenuto, frame_bottoni, prenota
+    # --- SEZIONE TITOLO ---
+    benvenuto = tk.Label(window, text="Benvenuto!", font=("Arial", 16), bg="white")
+    benvenuto.pack(pady=20) 
 
+    # --- SEZIONE BOTTONI ---
+    frame_bottoni = tk.Frame(window, bg="white")
+    frame_bottoni.pack(pady=50)
+
+    prenota = tk.Button(frame_bottoni, text="Prenota Sala", relief="raised", command=prenota_sezione)
+    prenota.grid(row=0, column=0, padx=10) 
+
+    impostazioni = tk.Button(frame_bottoni, text="Impostazioni", relief="raised", command=impostazioni)
+    impostazioni.grid(row=0, column=1, padx=10)
+
+home()
 if __name__ == "__main__":
     window.mainloop()
