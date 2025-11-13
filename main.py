@@ -2,13 +2,11 @@
 # Data inizio sviluppo: 9/11/25
 
 # BUG TROVATI:
-#! 1. BUG: Appena torno nella home il tasto impostazioni non va.
-
 
 # DA FARE:
 #TODO: Fai la grafica per inserire i dati per confermare la prenotazione
 #TODO: Creare schermata impostazioni
-#TODO: Migliorare UI
+#TODO: Migliorare UI ==> Aggiornata 13/11 | 
 
 
 import tkinter as tk
@@ -32,7 +30,7 @@ def clear():
         widget.place_forget()
 
 def dati_sala():
-    pass
+    clear()
 
 def prenota_sala_ui(sala_selezionata):
     with open("sale.json", "r", encoding="utf-8") as file:
@@ -80,28 +78,6 @@ def prenota_sala_ui(sala_selezionata):
 
 
 def prenota_sezione():
-    #------------------------------------------------
-    #|           [Seleziona la Data]                 |
-    #|  (Calendario o input di data)                 |
-    #------------------------------------------------
-    #|                                              |
-    #|   [Lista Sale Disponibili]                   |
-    #|   Sala A - Capienza: 10 persone [Prenota]     |
-    #|   Sala B - Capienza: 20 persone [Prenota]     |
-    #|   Sala C - Capienza: 15 persone [Prenota]     |
-    #|                                              |
-    #------------------------------------------------
-    #|      [Seleziona Orario]                       |
-    #|  (Orario di inizio e fine)                   |
-    #------------------------------------------------
-    #|  [Conferma Prenotazione]                      |
-    #------------------------------------------------
-    #frame_test = tk.Frame(window, bg="white")
-    #frame_test.pack(pady=20)
-
-    #testo_di_conferma = tk.Label(frame_test, text="Test riuscito")
-    #testo_di_conferma.grid(row=0, column=0, padx=10) 
-
     global frame_titolo_prenotazioni, frame_elenco_sale
     clear()
 
@@ -132,8 +108,15 @@ def prenota_sezione():
         occupata = sala["occupata"]
         orario = sala["orario-occupato"]
         occupata_da = sala["occupata_da"]
-        btn_sala = tk.Button(frame_elenco_sale, text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", command=lambda s=sala: prenota_sala_ui(s))
+        btn_sala = tk.Button(frame_elenco_sale, 
+                            text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", 
+                            command=lambda s=sala: prenota_sala_ui(s),
+                            bg="#808080", fg="white", relief="flat", width=100, height=2)
+        
         btn_sala.pack(pady=25)
+    
+        btn_sala.bind("<Enter>", lambda e: btn_sala.config(bg="#778899", relief="raised", bd=3))
+        btn_sala.bind("<Leave>", lambda e: btn_sala.config(bg="#808080", relief="flat", bd=1))
 
 
 
@@ -151,11 +134,6 @@ def impostazioni():
     #------------------------------------------------
     #|  [Logout]                                    |
     #------------------------------------------------
-    #frame_test_2 = tk.Frame(window, bg="white")
-    #frame_test_2.pack(pady=20)
-
-    #testo_di_conferma = tk.Label(frame_test_2, text="Test riuscito")
-    #testo_di_conferma.grid(row=0, column=0, padx=10) 
     
     clear()
     button_back_widget = tk.Frame(window, bg="white")
@@ -165,29 +143,36 @@ def impostazioni():
     back_button.grid(row=0, column=0)
 
 
+
 def home():
     clear()
 
     button_exit_widget = tk.Frame(window, bg="white")
     button_exit_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
     back_exit = tk.Button(button_exit_widget, text="X", font=("Arial", 18, "bold"),
-                            bg="white", relief="flat", command=exit)
+                            bg="white", relief="flat", command=window.quit)
     back_exit.grid(row=0, column=0)
 
-    global impostazioni, benvenuto, frame_bottoni, prenota
     # --- SEZIONE TITOLO ---
-    benvenuto = tk.Label(window, text="Benvenuto!", font=("Arial", 16), bg="white")
+    benvenuto = tk.Label(window, text="Benvenuto!", font=("Arial", 20), bg="white")
     benvenuto.pack(pady=20) 
 
     # --- SEZIONE BOTTONI ---
     frame_bottoni = tk.Frame(window, bg="white")
     frame_bottoni.pack(pady=50)
 
-    prenota = tk.Button(frame_bottoni, text="Prenota Sala", relief="raised", command=prenota_sezione)
-    prenota.grid(row=0, column=0, padx=10) 
+    prenota_btn = tk.Button(frame_bottoni, text="Prenota Sala", relief="raised", command=prenota_sezione, bg="#808080", fg="white", width=20, height=2)
+    prenota_btn.grid(row=0, column=0, padx=10) 
 
-    impostazioni = tk.Button(frame_bottoni, text="Impostazioni", relief="raised", command=impostazioni)
-    impostazioni.grid(row=0, column=1, padx=10)
+    impostazioni_btn = tk.Button(frame_bottoni, text="Impostazioni", relief="raised", command=impostazioni, bg="#808080", fg="white", width=20, height=2)
+    impostazioni_btn.grid(row=0, column=1, padx=10)
+
+    # Bind hover events
+    prenota_btn.bind("<Enter>", lambda e: prenota_btn.config(bg="#778899", relief="raised", bd=3))
+    prenota_btn.bind("<Leave>", lambda e: prenota_btn.config(bg="#808080", relief="flat", bd=1))
+    impostazioni_btn.bind("<Enter>", lambda e: impostazioni_btn.config(bg="#778899", relief="raised", bd=3))
+    impostazioni_btn.bind("<Leave>", lambda e: impostazioni_btn.config(bg="#808080", relief="flat", bd=1))
+
 
 home()
 if __name__ == "__main__":
