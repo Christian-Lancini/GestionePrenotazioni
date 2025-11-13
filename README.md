@@ -35,7 +35,7 @@ E' un app in python fatta con la libreria tkinter, simula un gestore di prenotaz
 
 ## UI
 
-L'app non è centrata sulla grafica, ho cercato di renderlo il più carino possibile con Tkinter:
+L'app non è centrata sulla grafica, ho cercato di renderlo il più carino possibile con Tkinter(Si prevedono miglioramenti in futuro):
 
 - **#f7f7f7**
 - **#333**
