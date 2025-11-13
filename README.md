@@ -12,8 +12,8 @@ E' un app in python fatta con la libreria tkinter, simula un gestore di prenotaz
 1. **Avvio dello script:**
 
    - Esegui lo script con il comando:
-     ```python
-     main.py
+     ```bash
+     python main.py
      ```
 
 2. **Scegli un opzione:**
