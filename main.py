@@ -4,7 +4,7 @@
 # BUG TROVATI:
 
 # DA FARE:
-#TODO: Fai la grafica per inserire i dati per confermare la prenotazione
+#TODO: Modifica il file json quando invia i dati.
 #TODO: Creare schermata impostazioni
 #TODO: Migliorare UI ==> Aggiornata 13/11 | 
 
@@ -29,12 +29,45 @@ def clear():
         widget.grid_forget()
         widget.place_forget()
 
-def dati_sala():
+def invia_dati(utente, h_inizio, h_fine, sala):
+    #* USA .get() per i input 
+    print(f"Nome utente: {utente}, Sala: {sala['nome']}, Ora inizio: {h_inizio}, Ora fine: {h_fine}")
     clear()
+    success_widget = tk.Frame(window, bg="white")
+    success_widget.pack(padx=20, pady=20)
+
+    success_text = tk.Label(success_widget, bg="white", text="Prenotazione avvenuta con successo!", font=("Arial", 16, "bold"))
+    success_text.pack(pady=10)
+
+
+def dati_sala(sala):
+    clear()
+    info_widget = tk.Frame(window, bg="white")
+    info_widget.pack(padx=20, pady=20)
+
+    utente_text = tk.Label(info_widget, bg="white", text="Inserisci nome utente: ")
+    utente_text.pack(pady=10)
+    utente = tk.Entry(info_widget, width=30)
+    utente.pack(pady=10)
+
+    h_inizio_text = tk.Label(info_widget, bg="white", text="Inserisci ora di inizio: ")
+    h_inizio_text.pack(pady=10)
+    h_inizio = tk.Entry(info_widget, width=30)
+    h_inizio.pack(pady=10)
+
+    h_fine_text = tk.Label(info_widget, bg="white", text="Inserisci ora di fine: ")
+    h_fine_text.pack(pady=10)
+    h_fine = tk.Entry(info_widget, width=30)
+    h_fine.pack(pady=10)
+
+    button = tk.Button(info_widget, text="Conferma prenotazione", command=lambda: invia_dati(utente.get(), h_inizio.get(), h_fine.get(), sala))
+    button.pack(pady=10)
+
+
 
 def prenota_sala_ui(sala_selezionata):
     with open("sale.json", "r", encoding="utf-8") as file:
-        sale_data = json.load(file) 
+        sale_data = json.load(file)
 
     sala_trovata = None
     for s in sale_data:
@@ -66,7 +99,7 @@ def prenota_sala_ui(sala_selezionata):
         conferma_label = tk.Label(frame_titolo_prenota, text=testo_sala, bg="#f7f7f7", font=("Arial", 16), fg="#555")
         conferma_label.pack(pady=20)
 
-        conferma_btn = tk.Button(frame_titolo_prenota, text="Conferma Prenotazione", font=("Helvetica", 14), bg="#808080",  fg="white", relief="flat", width=20, height=2, command=dati_sala)
+        conferma_btn = tk.Button(frame_titolo_prenota, text="Conferma Prenotazione", font=("Helvetica", 14), bg="#808080",  fg="white", relief="flat", width=20, height=2, command=lambda: dati_sala(sala_selezionata))
         conferma_btn.pack(pady=20)
 
         # Effetto hover
