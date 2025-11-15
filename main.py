@@ -4,9 +4,10 @@
 # BUG TROVATI:
 
 # DA FARE:
-#TODO: Modifica il file json quando invia i dati.
-#TODO: Creare schermata impostazioni
-#TODO: Migliorare UI ==> Aggiornata 13/11 | 
+#TODO: Creare schermata impostazioni | pip install plyer(notifiche)
+#TODO: Gestire le sale prenotate che non devono apparire. | if occupata
+#TODO: Sezione alla home, Prenotate
+#TODO: Migliora grafica
 
 
 import tkinter as tk
@@ -29,23 +30,54 @@ def clear():
         widget.grid_forget()
         widget.place_forget()
 
+import json
+import tkinter as tk
+
 def invia_dati(utente, h_inizio, h_fine, sala):
-    #* USA .get() per i input 
-    print(f"Nome utente: {utente}, Sala: {sala['nome']}, Ora inizio: {h_inizio}, Ora fine: {h_fine}")
-    clear()
+    clear() 
+    #* Usa .get() per i input
+    button_back_widget = tk.Frame(window, bg="white")
+    button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                                bg="white", relief="flat", command=prenota_sezione)
+    back_button.grid(row=0, column=0)
+
     success_widget = tk.Frame(window, bg="white")
     success_widget.pack(padx=20, pady=20)
 
     success_text = tk.Label(success_widget, bg="white", text="Prenotazione avvenuta con successo!", font=("Arial", 16, "bold"))
     success_text.pack(pady=10)
 
+    try:
+        with open('sale.json', 'r') as file:
+            sale = json.load(file)
 
+        for s in sale:
+            if s['nome'] == sala['nome']:
+                s['occupata'] = True
+                s['orario-occupato'] = f"{h_inizio} - {h_fine}"  
+                s['occupata_da'] = utente  
+                break
+
+        with open('sale.json', 'w') as file:
+            json.dump(sale, file, indent=4)
+
+    except FileNotFoundError as e:
+        print(f"Errore: il file sale.json non è stato trovato. {e}")
+  
 def dati_sala(sala):
     clear()
+
+    button_back_widget = tk.Frame(window, bg="white")
+    button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                                bg="white", relief="flat", command=prenota_sezione)
+    back_button.grid(row=0, column=0)
+
     info_widget = tk.Frame(window, bg="white")
     info_widget.pack(padx=20, pady=20)
 
-    utente_text = tk.Label(info_widget, bg="white", text="Inserisci nome utente: ")
+    utente_text = tk.Label(info_widget, bg="white", text="Nome & Cognome: ")
     utente_text.pack(pady=10)
     utente = tk.Entry(info_widget, width=30)
     utente.pack(pady=10)
@@ -62,6 +94,7 @@ def dati_sala(sala):
 
     button = tk.Button(info_widget, text="Conferma prenotazione", command=lambda: invia_dati(utente.get(), h_inizio.get(), h_fine.get(), sala))
     button.pack(pady=10)
+
 
 
 
@@ -123,7 +156,7 @@ def prenota_sezione():
     frame_titolo_prenotazioni = tk.Frame(window, bg="white")
     frame_titolo_prenotazioni.pack(pady=20)
 
-    titolo_prenotazione = tk.Label(frame_titolo_prenotazioni, text="Prenotazioni", bg="white", font=("Arial", 20))
+    titolo_prenotazione = tk.Label(frame_titolo_prenotazioni, text="PRENOTA", bg="white", font=("Arial", 20))
     titolo_prenotazione.pack(pady=50)
 
     frame_elenco_sale = tk.Frame(window, bg="white")
@@ -152,21 +185,16 @@ def prenota_sezione():
         btn_sala.bind("<Leave>", lambda e: btn_sala.config(bg="#808080", relief="flat", bd=1))
 
 
+def attiva_notifiche():
+    pass
 
+def disattiva_notifiche():
+    pass
     
 
 def impostazioni():
-    #------------------------------------------------
-    #|              [Impostazioni]                  |
-    #------------------------------------------------
-    #|                                              |
-    #|  [Modifica Profilo]                          |
-    #|  [Notifiche]                                 |
     #|  [Lingua]                                    |
     #|  [Tema]                                      |
-    #------------------------------------------------
-    #|  [Logout]                                    |
-    #------------------------------------------------
     
     clear()
     button_back_widget = tk.Frame(window, bg="white")
@@ -174,6 +202,21 @@ def impostazioni():
     back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
                             bg="white", relief="flat", command=home)
     back_button.grid(row=0, column=0)
+
+    titolo_widget = tk.Frame(window, bg="white")
+    titolo_widget.pack(pady=20)
+
+    titolo_impostazioni = tk.Label(titolo_widget, bg="white", text="IMPOSTAZIONI", font=("Arial", 20))
+    titolo_impostazioni.pack(pady=20)
+
+    notifiche_widget = tk.Frame(window, bg="white")
+    notifiche_widget.pack(pady=20)
+    notifiche_text = tk.Label(notifiche_widget, bg="white", text="Notifiche:")
+    notifiche_text.pack(pady=20)
+    notifiche_button = tk.Button(text="Attiva Notifiche", command=attiva_notifiche)
+    notifiche_button.pack(pady=20)
+    notifiche_button_dis = tk.Button(text="Disattiva Notifiche", command=attiva_notifiche)
+    notifiche_button_dis.pack(pady=20)
 
 
 

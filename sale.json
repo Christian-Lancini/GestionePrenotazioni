@@ -4,7 +4,7 @@
         "capienza": 100,
         "descrizione": "Una sala conferenze grande utile per grandi eventi.",
         "occupata": false,
-        "orario-occupato": 0,
+        "orario-occupato": "",
         "occupata_da": ""
     },
     {
@@ -12,22 +12,23 @@
         "capienza": 30,
         "descrizione": "Una sala conferenze utile per conferenze lavorative",
         "occupata": false,
-        "orario-occupato": 0,
+        "orario-occupato": "",
         "occupata_da": ""
     },
     {
         "nome": "sala#3",
         "capienza": 50,
-        "descrizione": "Una sala conferenze ideale per più team di lavoro",
+        "descrizione": "Una sala conferenze ideale per pi\u00f9 team di lavoro",
         "occupata": false,
-        "orario-occupato": 0,
+        "orario-occupato": "",
         "occupata_da": ""
-    },    {
+    },
+    {
         "nome": "sala#4",
         "capienza": 10,
         "descrizione": "Una sala conferenze per incontri lavorativi",
         "occupata": false,
-        "orario-occupato": 0,
+        "orario-occupato": "",
         "occupata_da": ""
     },
     {
@@ -35,7 +36,7 @@
         "capienza": 5,
         "descrizione": "Una sala conferenze ideate per colloqui di lavoro",
         "occupata": false,
-        "orario-occupato": 0,
+        "orario-occupato": "",
         "occupata_da": ""
     }
 ]
