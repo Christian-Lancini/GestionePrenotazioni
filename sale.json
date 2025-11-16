@@ -1,6 +1,6 @@
 [
     {
-        "nome": "sala#1",
+        "nome": "Sala Magna",
         "capienza": 100,
         "descrizione": "Una sala conferenze grande utile per grandi eventi.",
         "occupata": false,
@@ -8,7 +8,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "sala#2",
+        "nome": "Emengarda",
         "capienza": 30,
         "descrizione": "Una sala conferenze utile per conferenze lavorative",
         "occupata": false,
@@ -16,7 +16,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "sala#3",
+        "nome": "Reale",
         "capienza": 50,
         "descrizione": "Una sala conferenze ideale per pi\u00f9 team di lavoro",
         "occupata": false,
@@ -24,7 +24,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "sala#4",
+        "nome": "Rosa dei venti",
         "capienza": 10,
         "descrizione": "Una sala conferenze per incontri lavorativi",
         "occupata": false,
@@ -32,7 +32,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "sala#5",
+        "nome": "Sala COlloqui",
         "capienza": 5,
         "descrizione": "Una sala conferenze ideate per colloqui di lavoro",
         "occupata": false,

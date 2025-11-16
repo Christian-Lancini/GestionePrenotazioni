@@ -4,14 +4,12 @@
 # BUG TROVATI:
 
 # DA FARE:
-#TODO: Creare schermata impostazioni | pip install plyer(notifiche)
-#TODO: Gestire le sale prenotate che non devono apparire. | if occupata
 #TODO: Sezione alla home, Prenotate
-#TODO: Migliora grafica
-
+#TODO: 
 
 import tkinter as tk
 import json
+from plyer import notification
 
 window = tk.Tk()
 window.geometry("1200x700")
@@ -48,6 +46,15 @@ def invia_dati(utente, h_inizio, h_fine, sala):
     success_text = tk.Label(success_widget, bg="white", text="Prenotazione avvenuta con successo!", font=("Arial", 16, "bold"))
     success_text.pack(pady=10)
 
+    if check_notifiche() == "true":
+            notification.notify(
+            title=f"Sala prenotata '{sala['nome']}'",
+            message='La sala è stata prenotata correttamente',
+            timeout=10 
+        )
+    else:
+        pass
+
     try:
         with open('sale.json', 'r') as file:
             sale = json.load(file)
@@ -82,12 +89,12 @@ def dati_sala(sala):
     utente = tk.Entry(info_widget, width=30)
     utente.pack(pady=10)
 
-    h_inizio_text = tk.Label(info_widget, bg="white", text="Inserisci ora di inizio: ")
+    h_inizio_text = tk.Label(info_widget, bg="white", text="Inserisci ora di inizio (HH:MM): ")
     h_inizio_text.pack(pady=10)
     h_inizio = tk.Entry(info_widget, width=30)
     h_inizio.pack(pady=10)
 
-    h_fine_text = tk.Label(info_widget, bg="white", text="Inserisci ora di fine: ")
+    h_fine_text = tk.Label(info_widget, bg="white", text="Inserisci ora di fine (HH:MM): ")
     h_fine_text.pack(pady=10)
     h_fine = tk.Entry(info_widget, width=30)
     h_fine.pack(pady=10)
@@ -106,7 +113,6 @@ def prenota_sala_ui(sala_selezionata):
     for s in sale_data:
         if s["descrizione"] == sala_selezionata["descrizione"]:
             sala_trovata = s
-            print(sala_trovata)
             break
 
     if sala_trovata:
@@ -142,6 +148,20 @@ def prenota_sala_ui(sala_selezionata):
         errore_label = tk.Label(window, text="Sala non trovata. Riprova.", fg="red", bg="white")
         errore_label.pack(pady=10)
 
+def occupata_sala():
+    clear()
+    button_back_widget = tk.Frame(window, bg="white")
+    button_back_widget.pack(anchor="nw", padx=10, pady=10)  # Posizionamento a sinistra
+    back_button = tk.Button(button_back_widget, text="⭠", font=("Arial", 18, "bold"),
+                            bg="white", relief="flat", command=prenota_sezione)
+    back_button.grid(row=0, column=0)
+
+    occupata_widget = tk.Frame(window, bg="white")
+    occupata_widget.pack(pady=25)
+
+    occupata_text = tk.Label(occupata_widget, bg="white", text="Sala Occupata", font=("Arial", 20))
+    occupata_text.pack(pady=25)
+
 
 def prenota_sezione():
     global frame_titolo_prenotazioni, frame_elenco_sale
@@ -169,32 +189,95 @@ def prenota_sezione():
 
     for sala in sale:   
         i += 1
-        desc = sala["descrizione"]
+        nome = sala["nome"]
         cap = sala["capienza"]
         occupata = sala["occupata"]
         orario = sala["orario-occupato"]
         occupata_da = sala["occupata_da"]
-        btn_sala = tk.Button(frame_elenco_sale, 
-                            text=f"{i}. Sala: {desc}; Capienza: {cap}; Occupata: {occupata}; Occupata da: {occupata_da}; Orario: {orario}", 
-                            command=lambda s=sala: prenota_sala_ui(s),
-                            bg="#808080", fg="white", relief="flat", width=100, height=2)
+
+        if occupata == True:
+            btn_sala = tk.Button(frame_elenco_sale, 
+                            text=f"{i}. Sala: {nome}; Occupata da: {occupata_da}; Orario: {orario}", 
+                            command=occupata_sala,
+                            bg="red", fg="white", relief="flat", width=100, height=2)
         
-        btn_sala.pack(pady=25)
-    
-        btn_sala.bind("<Enter>", lambda e: btn_sala.config(bg="#778899", relief="raised", bd=3))
-        btn_sala.bind("<Leave>", lambda e: btn_sala.config(bg="#808080", relief="flat", bd=1))
+            btn_sala.pack(pady=25)
+
+        else:
+            btn_sala = tk.Button(frame_elenco_sale, 
+                                text=f"{i}. Sala: {nome}; Capienza: {cap}", 
+                                command=lambda s=sala: prenota_sala_ui(s),
+                                bg="#808080", fg="white", relief="flat", width=100, height=2)
+            
+            btn_sala.pack(pady=25)
+        
+            btn_sala.bind("<Enter>", lambda e: btn_sala.config(bg="#778899", relief="raised", bd=3))
+            btn_sala.bind("<Leave>", lambda e: btn_sala.config(bg="#808080", relief="flat", bd=1))
+
+def check_notifiche():
+    try:
+        with open('notifiche.txt', 'r') as file:
+            contenuto = file.read()
+            if "true" in contenuto:
+                return "true"
+            else:
+                return "false"
+    except FileNotFoundError:
+        with open('notifiche.txt', 'w') as file:
+            file.write('false')
+        return "false"
 
 
 def attiva_notifiche():
-    pass
+    with open('notifiche.txt', 'r') as file:
+        contenuto = file.read()
+
+        if "false" in contenuto:
+            with open('notifiche.txt', 'w') as file:
+                contenuto = 'true'
+                file.write(contenuto)
+            if check_notifiche() == "true":
+                    notification.notify(
+                    title=f"Notifiche Attivate",
+                    timeout=10 
+                )
+            else:
+                pass
+        elif "true" in contenuto:
+            print("Notifiche già avviate")
+        else:
+            print("Dispositivo alterato, recupero del file...")
+            with open('notifiche.txt', 'w') as file:
+                contenuto = 'true'
+                file.write(contenuto)
 
 def disattiva_notifiche():
-    pass
-    
+    with open('notifiche.txt', 'r') as file:
+        contenuto = file.read()
+
+        if "false" in contenuto:
+            print("Notifiche già disattivate")
+        elif "true" in contenuto:
+            with open('notifiche.txt', 'w') as file:
+                contenuto = 'false'
+                file.write(contenuto)
+            
+            if check_notifiche() == "false":
+                    notification.notify(
+                    title=f"Notifiche da ora disattivate",
+                    timeout=10 
+                )
+            else:
+                pass
+        else:
+            print("Dispositivo alterato, recupero del file...")
+            with open('notifiche.txt', 'w') as file:
+                contenuto = 'false'
+                file.write(contenuto)
 
 def impostazioni():
-    #|  [Lingua]                                    |
-    #|  [Tema]                                      |
+    #|  [Lingua]                      |
+    #|  [Tema]                        |
     
     clear()
     button_back_widget = tk.Frame(window, bg="white")
@@ -211,14 +294,21 @@ def impostazioni():
 
     notifiche_widget = tk.Frame(window, bg="white")
     notifiche_widget.pack(pady=20)
+
     notifiche_text = tk.Label(notifiche_widget, bg="white", text="Notifiche:")
     notifiche_text.pack(pady=20)
-    notifiche_button = tk.Button(text="Attiva Notifiche", command=attiva_notifiche)
+
+    notifiche_button = tk.Button(text="Attiva Notifiche", command=attiva_notifiche, bg="#808080", fg="white", relief="flat", width=100, height=2)
     notifiche_button.pack(pady=20)
-    notifiche_button_dis = tk.Button(text="Disattiva Notifiche", command=attiva_notifiche)
+
+    notifiche_button_dis = tk.Button(text="Disattiva Notifiche", command=disattiva_notifiche, bg="#808080", fg="white", relief="flat", width=100, height=2)
     notifiche_button_dis.pack(pady=20)
 
+    notifiche_button.bind("<Enter>", lambda e: notifiche_button.config(bg="#778899", relief="raised", bd=3))
+    notifiche_button.bind("<Leave>", lambda e: notifiche_button.config(bg="#808080", relief="flat", bd=1))
 
+    notifiche_button_dis.bind("<Enter>", lambda e: notifiche_button_dis.config(bg="#778899", relief="raised", bd=3))
+    notifiche_button_dis.bind("<Leave>", lambda e: notifiche_button_dis.config(bg="#808080", relief="flat", bd=1))  
 
 def home():
     clear()
