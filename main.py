@@ -270,8 +270,6 @@ def disattiva_notifiche():
                 file.write(contenuto)
 
 def impostazioni():
-    #|  [Lingua]                      |
-    #|  [Tema]                        |
     
     clear()
     button_back_widget = tk.Frame(window, bg="white")

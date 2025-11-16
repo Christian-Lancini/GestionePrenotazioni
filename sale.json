@@ -24,7 +24,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "Rosa dei venti",
+        "nome": "Rosa Dei Venti",
         "capienza": 10,
         "descrizione": "Una sala conferenze per incontri lavorativi",
         "occupata": false,
@@ -32,7 +32,7 @@
         "occupata_da": ""
     },
     {
-        "nome": "Sala COlloqui",
+        "nome": "Sala Colloqui",
         "capienza": 5,
         "descrizione": "Una sala conferenze ideate per colloqui di lavoro",
         "occupata": false,
