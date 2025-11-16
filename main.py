@@ -1,11 +1,6 @@
 # AUTORE: Christian Lancini
 # Data inizio sviluppo: 9/11/25
-
-# BUG TROVATI:
-
-# DA FARE:
-#TODO: Sezione alla home, Prenotate
-#TODO: 
+# Versione: 1.0 (16/11/25)
 
 import tkinter as tk
 import json
@@ -16,10 +11,13 @@ window.geometry("1200x700")
 window.title("Gestione di prenotazione")
 window.configure(background="white")
 
-# --- VARIABILI GLOBAL PER CLEAR2 ---
-frame_titolo_prenotazioni = None
-frame_elenco_sale = None
+# OTTIMIZZAZIONE
+def hover_effect(button, bg_color, relief_style):
+    button.config(bg=bg_color, relief=relief_style)
 
+def applica_hover(button):
+    button.bind("<Enter>", lambda e: hover_effect(button, "#778899", "raised"))
+    button.bind("<Leave>", lambda e: hover_effect(button, "#808080", "flat"))
 
 # --- FUNZIONI ---
 def clear():
@@ -28,8 +26,6 @@ def clear():
         widget.grid_forget()
         widget.place_forget()
 
-import json
-import tkinter as tk
 
 def invia_dati(utente, h_inizio, h_fine, sala):
     clear() 
@@ -142,8 +138,7 @@ def prenota_sala_ui(sala_selezionata):
         conferma_btn.pack(pady=20)
 
         # Effetto hover
-        conferma_btn.bind("<Enter>", lambda e: conferma_btn.config(bg="#778899", relief="raised"))
-        conferma_btn.bind("<Leave>", lambda e: conferma_btn.config(bg="#808080", relief="flat"))
+        applica_hover(conferma_btn)
     else:
         errore_label = tk.Label(window, text="Sala non trovata. Riprova.", fg="red", bg="white")
         errore_label.pack(pady=10)
@@ -211,8 +206,7 @@ def prenota_sezione():
             
             btn_sala.pack(pady=25)
         
-            btn_sala.bind("<Enter>", lambda e: btn_sala.config(bg="#778899", relief="raised", bd=3))
-            btn_sala.bind("<Leave>", lambda e: btn_sala.config(bg="#808080", relief="flat", bd=1))
+            applica_hover(btn_sala)
 
 def check_notifiche():
     try:
@@ -304,11 +298,8 @@ def impostazioni():
     notifiche_button_dis = tk.Button(text="Disattiva Notifiche", command=disattiva_notifiche, bg="#808080", fg="white", relief="flat", width=100, height=2)
     notifiche_button_dis.pack(pady=20)
 
-    notifiche_button.bind("<Enter>", lambda e: notifiche_button.config(bg="#778899", relief="raised", bd=3))
-    notifiche_button.bind("<Leave>", lambda e: notifiche_button.config(bg="#808080", relief="flat", bd=1))
-
-    notifiche_button_dis.bind("<Enter>", lambda e: notifiche_button_dis.config(bg="#778899", relief="raised", bd=3))
-    notifiche_button_dis.bind("<Leave>", lambda e: notifiche_button_dis.config(bg="#808080", relief="flat", bd=1))  
+    applica_hover(notifiche_button)
+    applica_hover(notifiche_button_dis)
 
 def home():
     clear()
@@ -334,12 +325,11 @@ def home():
     impostazioni_btn.grid(row=0, column=1, padx=10)
 
     # Bind hover events
-    prenota_btn.bind("<Enter>", lambda e: prenota_btn.config(bg="#778899", relief="raised", bd=3))
-    prenota_btn.bind("<Leave>", lambda e: prenota_btn.config(bg="#808080", relief="flat", bd=1))
-    impostazioni_btn.bind("<Enter>", lambda e: impostazioni_btn.config(bg="#778899", relief="raised", bd=3))
-    impostazioni_btn.bind("<Leave>", lambda e: impostazioni_btn.config(bg="#808080", relief="flat", bd=1))
+    applica_hover(prenota_btn)
+    applica_hover(impostazioni_btn)
 
 
 home()
+
 if __name__ == "__main__":
     window.mainloop()
